@@ -115,6 +115,7 @@ class TextEditorPresenter
     @state.content.highlights = {}
 
     for decoration in @model.getHighlightDecorations()
+      continue unless decoration.getMarker().isValid()
       screenRange = decoration.getMarker().getScreenRange()
       if screenRange.intersectsRowRange(startRow, endRow - 1)
         if screenRange.start.row < startRow
@@ -126,7 +127,9 @@ class TextEditorPresenter
         continue if screenRange.isEmpty()
         @state.content.highlights[decoration.id] =
           class: decoration.getProperties().class
+          deprecatedRegionClass: decoration.getProperties().deprecatedRegionClass
           regions: @buildHighlightRegions(screenRange)
+    @emitter.emit 'did-update-state'
 
   buildHighlightRegions: (screenRange) ->
     lineHeightInPixels = @getLineHeight()
@@ -342,8 +345,10 @@ class TextEditorPresenter
 
   observeHighlightDecoration: (decoration) ->
     markerDidChangeDisposable = decoration.getMarker().onDidChange(@updateHighlightsState.bind(this))
+    didChangePropertiesDisposable = decoration.onDidChangeProperties(@updateHighlightsState.bind(this))
     didDestroyDisposable = decoration.onDidDestroy =>
       @disposables.remove(markerDidChangeDisposable)
+      @disposables.remove(didChangePropertiesDisposable)
       @disposables.remove(didDestroyDisposable)
       @updateHighlightsState()
 

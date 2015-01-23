@@ -827,7 +827,7 @@ describe "TextEditorComponent", ->
       {left} = wrapperNode.pixelPositionForScreenPosition([1, 10])
       expect(cursorNode.style['-webkit-transform']).toBe "translate(#{left}px, #{editor.getLineHeightInPixels()}px)"
 
-  describe "selection rendering", ->
+  fdescribe "selection rendering", ->
     [scrollViewNode, scrollViewClientLeft] = []
 
     beforeEach ->
@@ -1078,7 +1078,7 @@ describe "TextEditorComponent", ->
         expect(lineAndLineNumberHaveClass(2, 'only-non-empty')).toBe false
         expect(lineAndLineNumberHaveClass(3, 'only-non-empty')).toBe false
 
-  describe "highlight decoration rendering", ->
+  fdescribe "highlight decoration rendering", ->
     [marker, decoration, decorationParams, scrollViewClientLeft] = []
     beforeEach ->
       scrollViewClientLeft = componentNode.querySelector('.scroll-view').getBoundingClientRect().left
@@ -1104,7 +1104,7 @@ describe "TextEditorComponent", ->
       # Nothing when outside the rendered row range
       expect(regions.length).toBe 0
 
-      verticalScrollbarNode.scrollTop = 3.5 * lineHeightInPixels
+      verticalScrollbarNode.scrollTop = 4.5 * lineHeightInPixels
       verticalScrollbarNode.dispatchEvent(new UIEvent('scroll'))
       nextAnimationFrame()
 
